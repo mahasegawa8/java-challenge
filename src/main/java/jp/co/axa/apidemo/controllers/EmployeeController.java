@@ -46,13 +46,19 @@ public class EmployeeController {
                                @PathVariable(name="employeeId")Long employeeId){
         Employee emp = employeeService.getEmployee(employeeId);
 
-        // Update the fields of the existing employee with the new details
-        emp.setName(employee.getName());
-        emp.setSalary(employee.getSalary());
-        emp.setDepartment(employee.getDepartment());
-        if(emp != null){
-            employeeService.updateEmployee(emp);
+        // Update the fields of the existing employee with the new values from the request.
+        // Check each field from the request. If it's not null, update the existing employee.
+        if (employee.getName() != null) {
+            emp.setName(employee.getName());
         }
-    }
 
+        if (employee.getSalary() != null) {
+            emp.setSalary(employee.getSalary());
+        }
+
+        if (employee.getDepartment() != null) {
+            emp.setDepartment(employee.getDepartment());
+        }
+        employeeService.updateEmployee(emp);
+    }
 }

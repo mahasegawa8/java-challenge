@@ -42,7 +42,7 @@ public class EmployeeController {
     }
 
     @PutMapping("/employees/{employeeId}")
-    public void updateEmployee(@RequestBody Employee employee,
+    public Employee updateEmployee(@RequestBody Employee employee,
                                @PathVariable(name="employeeId")Long employeeId){
         Employee emp = employeeService.getEmployee(employeeId);
 
@@ -59,6 +59,6 @@ public class EmployeeController {
         if (employee.getDepartment() != null) {
             emp.setDepartment(employee.getDepartment());
         }
-        employeeService.updateEmployee(emp);
+        return employeeService.updateEmployee(emp);
     }
 }

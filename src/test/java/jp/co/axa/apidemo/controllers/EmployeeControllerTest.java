@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -42,14 +43,15 @@ public class EmployeeControllerTest {
 
     @Test
     public void getEmployees_shouldReturnAllEmployees() throws Exception {
-        // Arrange: Use the POST endpoint to create a new employee
+        // Arrange: Use the POST endpoint to create a new employee, authenticating as admin.
         Employee newEmployee = new Employee(null, "Test Employee", 80000, "Engineering");
 
         mockMvc.perform(post("/api/v1/employees")
+                .with(httpBasic("admin", "password")) // Add admin authentication
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(newEmployee)));
 
-        // Act & Assert: Now perform the GET request and check the result
+        // Act & Assert: Now perform the GET request (which is public) and check the result.
         mockMvc.perform(get("/api/v1/employees"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -58,10 +60,9 @@ public class EmployeeControllerTest {
 
     @Test
     public void getEmployeeById_shouldReturnNotFoundForInvalidId() throws Exception {
-        // Act & Assert
+        // Act & Assert: GET endpoints are public, so no auth needed here.
         mockMvc.perform(get("/api/v1/employees/{id}", 999L))
                 .andExpect(status().isNotFound());
-
     }
 
     @Test
@@ -70,7 +71,7 @@ public class EmployeeControllerTest {
         Employee employee = new Employee(null, "Find Me", 55000, "QA");
         employeeService.saveEmployee(employee);
 
-        // Act & Assert
+        // Act & Assert: GET is public, no auth needed.
         mockMvc.perform(get("/api/v1/employees/{id}", employee.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Find Me"))
@@ -82,8 +83,9 @@ public class EmployeeControllerTest {
         // Arrange
         Employee newEmployee = new Employee(null, "Peter Jones", 70000, "Sales");
 
-        // Act & Assert
+        // Act & Assert: Add admin authentication to the POST request.
         mockMvc.perform(post("/api/v1/employees")
+                .with(httpBasic("admin", "password")) // Add admin authentication
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(newEmployee)))
                 .andExpect(status().isOk());
@@ -98,14 +100,11 @@ public class EmployeeControllerTest {
         // Prepare the updated employee data.
         Employee updatedDetails = new Employee(null, "Updated Name", 65000, "Research");
 
-        // Act: Perform the PUT request to update the employee.
+        // Act & Assert: Perform the PUT request and check the response body directly.
         mockMvc.perform(put("/api/v1/employees/{id}", initialEmployee.getId())
+                .with(httpBasic("admin", "password"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedDetails)))
-                .andExpect(status().isOk());
-
-        // Assert: Fetch the employee again to verify the details were updated.
-        mockMvc.perform(get("/api/v1/employees/{id}", initialEmployee.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Updated Name"))
                 .andExpect(jsonPath("$.salary").value(65000));
@@ -118,8 +117,9 @@ public class EmployeeControllerTest {
         employeeService.saveEmployee(employeeToDelete);
         Long employeeId = employeeToDelete.getId();
 
-        // Act: Perform the delete request.
-        mockMvc.perform(delete("/api/v1/employees/{id}", employeeId))
+        // Act: Perform the delete request with admin authentication.
+        mockMvc.perform(delete("/api/v1/employees/{id}", employeeId)
+                .with(httpBasic("admin", "password"))) // Add admin authentication
                 .andExpect(status().isOk());
 
         // Assert: Verify that getting the employee by ID now results in a 404 Not Found.

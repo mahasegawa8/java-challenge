@@ -14,11 +14,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         // Create an in-memory user for demonstration purposes
+        // {noop} indicates plain text password, not for production use
         auth.inMemoryAuthentication()
             .withUser("user").password("{noop}password").roles("USER")
             .and()
             .withUser("admin").password("{noop}password").roles("ADMIN");
-        // {noop} indicates plain text password, not for production use
     }
 
     @Override

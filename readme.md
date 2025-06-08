@@ -10,8 +10,6 @@ Application (with the embedded H2 database) is ready to be used ! You can access
 
 > Don't forget to set the `JDBC URL` value as `jdbc:h2:mem:testdb` for H2 UI.
 
-
-
 ### Instructions
 
 - download the zip file of this project
@@ -31,13 +29,14 @@ Application (with the embedded H2 database) is ready to be used ! You can access
 - Send us the link of your repository.
 
 #### Restrictions
+
 - use java 8
 
-
 #### What we will look for
+
 - Readability of your code
 - Documentation
-- Comments in your code 
+- Comments in your code
 - Appropriate usage of spring boot
 - Appropriate usage of packages
 - Is the application running as expected
@@ -50,3 +49,13 @@ Please let us know more about your Java experience in a few sentences. For examp
 - I have 3 years experience in Java and I started to use Spring Boot from last year
 - I'm a beginner and just recently learned Spring Boot
 - I know Spring Boot very well and have been using it for many years
+
+### What I did
+
+- Add tests for Controllers and Services
+- Add exception handler for exception handling tests
+- Changed syntax
+  - use NoArgsConstructor
+- Fixed bugs
+  - saveEmployee to create a new record properly
+  - updateEmployee to update an existing record properly

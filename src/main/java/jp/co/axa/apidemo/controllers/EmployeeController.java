@@ -45,10 +45,14 @@ public class EmployeeController {
     public void updateEmployee(@RequestBody Employee employee,
                                @PathVariable(name="employeeId")Long employeeId){
         Employee emp = employeeService.getEmployee(employeeId);
-        if(emp != null){
-            employeeService.updateEmployee(employee);
-        }
 
+        // Update the fields of the existing employee with the new details
+        emp.setName(employee.getName());
+        emp.setSalary(employee.getSalary());
+        emp.setDepartment(employee.getDepartment());
+        if(emp != null){
+            employeeService.updateEmployee(emp);
+        }
     }
 
 }

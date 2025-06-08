@@ -25,6 +25,10 @@ public class EmployeeServiceImpl implements EmployeeService{
 
     public Employee getEmployee(Long employeeId) {
         Optional<Employee> optEmp = employeeRepository.findById(employeeId);
+        if (!optEmp.isPresent()) {
+            throw new RuntimeException("Employee not found with id: " + employeeId);
+        }
+        // If the employee is found, return it
         return optEmp.get();
     }
 

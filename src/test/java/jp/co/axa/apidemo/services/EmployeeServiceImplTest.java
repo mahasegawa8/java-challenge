@@ -11,8 +11,10 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.lang.RuntimeException;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -66,5 +68,24 @@ public class EmployeeServiceImplTest {
 
         // Assert
         verify(employeeRepository, times(1)).save(employee1);
+    }
+
+    @Test
+    public void getEmployee_shouldThrowExceptionWhenNotFound_tryCatch() {
+        // Arrange: Set up the scenario where the employee is not found
+        long nonExistentId = 999L;
+        String expectedMessage = "Employee not found with id: " + nonExistentId;
+        when(employeeRepository.findById(nonExistentId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        try {
+            employeeService.getEmployee(nonExistentId);
+            // If no exception is thrown, the test should fail
+            fail("Expected ResourceNotFoundException to be thrown");
+        } catch (RuntimeException e) {
+            // Assert: Verify that the exception message is as expected
+            assertEquals(expectedMessage, e.getMessage());
+            verify(employeeRepository, times(1)).findById(nonExistentId);
+        }
     }
 }

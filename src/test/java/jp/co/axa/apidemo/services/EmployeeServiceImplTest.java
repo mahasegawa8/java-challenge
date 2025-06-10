@@ -1,6 +1,7 @@
 package jp.co.axa.apidemo.services;
 
 import jp.co.axa.apidemo.entities.Employee;
+import jp.co.axa.apidemo.exceptions.ResourceNotFoundException;
 import jp.co.axa.apidemo.repositories.EmployeeRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +12,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.lang.RuntimeException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -35,6 +35,7 @@ public class EmployeeServiceImplTest {
         employee2 = new Employee(2L, "Jane Smith", 60000, "HR");
     }
 
+    // Test case for retrieving all employees
     @Test
     public void retrieveEmployees_shouldReturnAllEmployees() {
         // Arrange: Define the mock's behavior
@@ -48,6 +49,7 @@ public class EmployeeServiceImplTest {
         verify(employeeRepository, times(1)).findAll(); // Verify that findAll() was called once
     }
 
+    // Test case for getting a specific employee by ID
     @Test
     public void getEmployee_shouldReturnEmployeeWhenFound() {
         // Arrange
@@ -61,6 +63,7 @@ public class EmployeeServiceImplTest {
         verify(employeeRepository, times(1)).findById(1L);
     }
 
+    // Test case for save an employee
     @Test
     public void saveEmployee_shouldCallSaveRepositoryMethod() {
         // Act
@@ -70,6 +73,7 @@ public class EmployeeServiceImplTest {
         verify(employeeRepository, times(1)).save(employee1);
     }
 
+    // Test case for getting an employee by ID when not found
     @Test
     public void getEmployee_shouldThrowExceptionWhenNotFound_tryCatch() {
         // Arrange: Set up the scenario where the employee is not found
@@ -82,7 +86,7 @@ public class EmployeeServiceImplTest {
             employeeService.getEmployee(nonExistentId);
             // If no exception is thrown, the test should fail
             fail("Expected ResourceNotFoundException to be thrown");
-        } catch (RuntimeException e) {
+        } catch (ResourceNotFoundException e) {
             // Assert: Verify that the exception message is as expected
             assertEquals(expectedMessage, e.getMessage());
             verify(employeeRepository, times(1)).findById(nonExistentId);

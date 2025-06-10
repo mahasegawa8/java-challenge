@@ -1,6 +1,7 @@
 package jp.co.axa.apidemo.services;
 
 import jp.co.axa.apidemo.entities.Employee;
+import jp.co.axa.apidemo.exceptions.ResourceNotFoundException;
 import jp.co.axa.apidemo.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -31,7 +32,8 @@ public class EmployeeServiceImpl implements EmployeeService{
     public Employee getEmployee(Long employeeId) {
         Optional<Employee> optEmp = employeeRepository.findById(employeeId);
         if (!optEmp.isPresent()) {
-            throw new RuntimeException("Employee not found with id: " + employeeId);
+            // If the employee is not found, throw a ResourceNotFoundException
+            throw new ResourceNotFoundException("Employee not found with id: " + employeeId);
         }
         return optEmp.get();
     }

@@ -50,12 +50,16 @@ Please let us know more about your Java experience in a few sentences. For examp
 - I'm a beginner and just recently learned Spring Boot
 - I know Spring Boot very well and have been using it for many years
 
+### My experience in Java
+
+I have a foundation in Java, with hands-on experience in developing and maintaining applications using the Struts framework.
+
 ### What I did
 
-- Add tests for Controllers and Services
-- Add exception handler for exception handling tests
-- Changed syntax
-  - use NoArgsConstructor
-- Fixed bugs
-  - saveEmployee to create a new record properly
-  - updateEmployee to update an existing record properly
+- Increased Test Coverage: I added unit tests for the service and controller layers, which verifies that the API endpoints are functioning correctly.
+- Implemented API Security: I secured the API endpoints by requiring ADMIN role credentials for all write operations (POST, PUT, DELETE), while keeping read operations (GET) public.
+- Added Caching: To optimize performance and reduce database load, I implemented caching for read operations on both individual and lists of employees.
+- Robust Error Handling: I implemented a exception handler that distinguishes between "resource not found" (404) errors and other internal server errors (500), making the API more reliable for users.
+- Corrected Creation Logic: Addressed a bug in the saveEmployee method to ensure new employee records are created reliably.
+- Enhanced Update Functionality: Improved the updateEmployee logic to support partial updates, allowing a client to send only the fields they wish to change without affecting other data.
+- Refactoring: Refactored the Employee entity to use Lombok's @NoArgsConstructor for cleaner, more concise, and more maintainable code.

@@ -13,23 +13,27 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="EMPLOYEE")
-@Getter
-@Setter
 @NoArgsConstructor
 public class Employee {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-
+    @Getter
     private Long id;
 
     @Column(name="EMPLOYEE_NAME")
+    @Getter
+    @Setter
     private String name;
 
     @Column(name="EMPLOYEE_SALARY")
+    @Getter
+    @Setter
     private Integer salary;
 
     @Column(name="DEPARTMENT")
+    @Getter
+    @Setter
     private String department;
 
     // Constructor for creating a new employee

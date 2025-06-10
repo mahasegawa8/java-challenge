@@ -41,23 +41,25 @@ public class EmployeeControllerTest {
         employeeRepository.deleteAll();
     }
 
+    // Test case for getting all employees (public access)
     @Test
     public void getEmployees_shouldReturnAllEmployees() throws Exception {
-        // Arrange: Use the POST endpoint to create a new employee, authenticating as admin.
+        // Use the POST endpoint to create a new employee, authenticating as admin.
         Employee newEmployee = new Employee(null, "Test Employee", 80000, "Engineering");
 
         mockMvc.perform(post("/api/v1/employees")
-                .with(httpBasic("admin", "password")) // Add admin authentication
+                .with(httpBasic("admin", "password"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(newEmployee)));
 
-        // Act & Assert: Now perform the GET request (which is public) and check the result.
+        // Perform the GET request and check the result.
         mockMvc.perform(get("/api/v1/employees"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                 .andExpect(jsonPath("$[0].name").value("Test Employee"));
     }
 
+    // Test case for getting an employee by ID (invalid ID)
     @Test
     public void getEmployeeById_shouldReturnNotFoundForInvalidId() throws Exception {
         // Act & Assert: GET endpoints are public, so no auth needed here.
@@ -65,6 +67,7 @@ public class EmployeeControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    // Test case for getting an employee by ID (valid ID)
     @Test
     public void getEmployeeById_shouldReturnCorrectEmployee() throws Exception {
         // Arrange: Save an employee directly using the service to get a valid ID.
@@ -78,6 +81,7 @@ public class EmployeeControllerTest {
                 .andExpect(jsonPath("$.department").value("QA"));
     }
 
+    // Test case for saving a new employee
     @Test
     public void saveEmployee_shouldCreateEmployeeAndReturnSuccessMessage() throws Exception {
         // Arrange
@@ -91,6 +95,7 @@ public class EmployeeControllerTest {
                 .andExpect(status().isOk());
     }
 
+    // Test case for updating an existing employee
     @Test
     public void updateEmployee_shouldUpdateExistingEmployee() throws Exception {
         // Arrange: Save an initial employee.
@@ -110,6 +115,7 @@ public class EmployeeControllerTest {
                 .andExpect(jsonPath("$.salary").value(65000));
     }
 
+    // Test case for deleting an employee
     @Test
     public void deleteEmployee_shouldRemoveEmployee() throws Exception {
         // Arrange: Save an employee to have something to delete.

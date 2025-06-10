@@ -7,11 +7,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    // TODO: Implement custom exceptions to distinguish 404 errors from other runtime exceptions.
-    @ExceptionHandler(RuntimeException.class)
-    public final ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
-        // If a runtime exception is thrown, assume it's a "not found" case
-        // and return a 404 status with the exception's message.
+    // Handle ResourceNotFoundException
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public final ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public final ResponseEntity<String> handleAllExceptions(Exception ex) {
+        // For any other exception, return a 500 Internal Server Error
+        return new ResponseEntity<>("An unexpected error occurred: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
